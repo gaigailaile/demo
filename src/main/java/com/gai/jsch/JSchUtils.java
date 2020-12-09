@@ -63,7 +63,7 @@ public class JSchUtils {
         return resultLines;
     }
 
-    public static long scpTo(String source, Session session, String destination) {
+    public static long scpTo(Session session, String source, String destination) {
         FileInputStream fileInputStream = null;
         try {
             ChannelExec channel = (ChannelExec) session.openChannel("exec");
@@ -277,7 +277,7 @@ public class JSchUtils {
                 out.flush();
             }
             //scp to remote
-            scpTo(tmpDestination, session, source);
+            scpTo(session,tmpDestination, source);
             return true;
         } catch (Exception e) {
             logger.error("remote edit error, ", e);
