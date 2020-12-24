@@ -21,15 +21,23 @@ public class JSchUtils {
         List<String> resultLines = new ArrayList<>();
         ChannelExec channelExec = null;
         InputStream inputStream = null;
+        InputStream inputStream2 = null;
         BufferedReader inputReader = null;
+        BufferedReader inputReader1 = null;
         try {
             channelExec = (ChannelExec) session.openChannel("exec");
             channelExec.setCommand(command);
             inputStream = channelExec.getInputStream();
+            inputStream2 = channelExec.getErrStream();
             channelExec.connect();
             inputReader = new BufferedReader(new InputStreamReader(inputStream));
             String inputLine = null;
             while ((inputLine = inputReader.readLine()) != null){
+                logger.debug("{}",inputLine);
+                resultLines.add(inputLine);
+            }
+            inputReader1 = new BufferedReader(new InputStreamReader(inputStream2));
+            while ((inputLine = inputReader1.readLine()) != null){
                 logger.debug("{}",inputLine);
                 resultLines.add(inputLine);
             }
