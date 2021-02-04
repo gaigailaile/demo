@@ -1,6 +1,7 @@
 package com.gai.jsch;
 
 import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
 public class JschDemo {
@@ -31,16 +32,41 @@ public class JschDemo {
 //        session.disconnect();
 //    }
 
+//    public static void main(String[] args) throws Exception {
+//        JSch jSch = new JSch();
+//        Session session = jSch.getSession("root","127.0.0.1");
+//        session.setPassword("123456");
+//        session.setConfig("StrictHostKeyChecking","no");
+//        session.connect();
+//        if(session.isConnected()){
+//            System.out.println("Host connected :" + session.getHost());
+//        }
+//        JSchUtils.scpFrom(session, "/home/gaidongxu/1.txt", "file-from-remote.txt");
+//
+//        session.disconnect();
+//    }
+
     public static void main(String[] args) throws Exception {
         JSch jSch = new JSch();
-        Session session = jSch.getSession("root","127.0.0.1");
-        session.setPassword("123456");
+        Session session = jSch.getSession("dataexa","192.168.5.101");
+        session.setPassword("DataExa@9038479457");
         session.setConfig("StrictHostKeyChecking","no");
         session.connect();
         if(session.isConnected()){
             System.out.println("Host connected :" + session.getHost());
         }
-        JSchUtils.scpFrom(session, "/home/gaidongxu/1.txt", "file-from-remote.txt");
+        JSchUtils.scpTo(session, "/Users/gaidongxu/a.py",
+                "/home/dataexa/artisan-microservice/artisan-asset/a.py");
+
+        JSchUtils.remoteExecute(session,"mkdir /home/dataexa/artisan-microservice/artisan-asset/pythondemo");
+
+        JSchUtils.remoteExecute(session,"python /home/dataexa/artisan-microservice/artisan-asset/a.py");
+
+//        JSchUtils.remoteExecute(session,"ls /home/dataexa/artisan-microservice/artisan-asset/");
+
+        JSchUtils.remoteExecute(session,"rm /home/dataexa/artisan-microservice/artisan-asset/a.py");
+
+//        JSchUtils.remoteExecute(session,"ls /home/dataexa/artisan-microservice/artisan-asset");
 
         session.disconnect();
     }

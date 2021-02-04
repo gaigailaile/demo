@@ -36,7 +36,7 @@ public class SparkDemo {
     public static void main(String[] args) {
         Process process = null;
         try {
-            process = Runtime.getRuntime().exec("spark-submit --class com.RunDemo --master local /Users/gaidongxu/IdeaProjects/demo1/target/demo1.jar");
+            process = Runtime.getRuntime().exec("spark-submit --class com.Env --master local /Users/gaidongxu/IdeaProjects/demo1/target/demo1.jar");
             BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line = null;
             while ((line = in.readLine()) != null) {
