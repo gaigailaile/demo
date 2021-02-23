@@ -1,5 +1,8 @@
 package com.gai.array;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Problem {
     //下列代码输出情况
 //    public static void main(String[] args) {
@@ -99,15 +102,87 @@ public class Problem {
         return -1;
     }
 
-    public static void main(String[] args) {
-//        int[] array = {2,3,1,0,2,5,3};
-//        int num = Problem.problem1(array);
-        int[] array = {2,3,5,4,1,2,6,7};
-        int num = Problem.problem2(array);
-        System.out.println(num);
-        System.out.println("----------------");
-        for (int a:array) {
-            System.out.print(a + " ");
+    /*
+     *  在一个长度为n的数组里的所有数字都在0到n-1的范围内。
+     *  数组中某些数字是重复的，但不知道有几个数字是重复的。
+     *  也不知道每个数字重复几次。请找出数组中任意一个重复的数字。
+     *  例如，如果输入长度为7的数组{2,3,1,0,2,5,3}，那么对应的输出是数字2和3。
+     */
+    public static int[] problem3(int[] array){
+
+        //判断数组长度是否为0
+        if(array == null || array.length==0){
+            return null;
         }
+
+        //判断所有数据是否都合法
+        for(int i = 0; i < array.length; i++){
+            if(array[i] < 0 || array[i] >= array.length){
+                return null;
+            }
+        }
+
+        //1.每个数字先和自己的下角标比较,相等不动
+        //2.不相等在和对应的下角标数据比较,相等存放到结果集合中
+        //3.不相等移动到对应角标位置
+        List<Integer> res = null;
+        for(int i = 0; i < array.length; i++){
+            while (array[i] != i){
+                int num = array[i];
+                if(array[num] == num){
+                    if(res == null){
+                        res = new ArrayList();
+                    }
+                    if(!res.contains(num)){
+                        res.add(num);
+                    }
+                    break;
+                }
+                array[i] = array[num];
+                array[num] = num;
+            }
+        }
+
+        return res==null?null:res.stream().mapToInt(Integer::valueOf).toArray();
+    }
+
+    /*
+    *   在一个二维数组中（每个一维数组的长度相同）.
+    *   每一行都按照从左到右递增的顺序排序.
+    *   每一列都按照从上到下递增的顺序排序.
+    *   请完成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。
+    *   例如输入{{1,2,3},{4,5,6},{7,8,9}}和数字7 ，返回true
+    *
+    * */
+    public static boolean problem4(int[][] array,int target){
+
+        //判断数组长度是否为0
+        if(array == null || array.length==0){
+            return false;
+        }
+
+        //先判断target和右上角数据的大小
+        //如果target < 右上角数据 说明该列不存在与target相等的数据 col-1
+        //如果target > 右上角数据 说明改行不存在与target相等的数据 num+1
+        int row = 0;
+        int col = array[row].length-1;
+
+        while (col >= 0 && row < array.length){
+            if(target == array[row][col]){
+                return true;
+            } else if(target > array[row][col]){
+                row++;
+            } else if(target < array[row][col]){
+                col--;
+            }
+        }
+
+        return false;
+    }
+
+    public static void main(String[] args) {
+        int[][] array = {{2,8,9},{7,9,12}};
+        boolean res = Problem.problem4(array,8);
+        System.out.println(res);
     }
 }
