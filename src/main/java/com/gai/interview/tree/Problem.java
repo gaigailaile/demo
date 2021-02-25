@@ -1,4 +1,4 @@
-package com.gai.tree;
+package com.gai.interview.tree;
 
 import java.util.Arrays;
 

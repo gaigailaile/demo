@@ -1,4 +1,4 @@
-package com.gai.linklist;
+package com.gai.interview.linklist;
 
 public class DoubleLinkedList {
     private Node head;//表示链表头

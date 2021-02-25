@@ -1,4 +1,4 @@
-package com.gai.array;
+package com.gai.interview.array;
 
 import java.util.ArrayList;
 import java.util.List;

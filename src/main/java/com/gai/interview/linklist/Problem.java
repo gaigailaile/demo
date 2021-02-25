@@ -1,4 +1,4 @@
-package com.gai.linklist;
+package com.gai.interview.linklist;
 
 import java.util.ArrayList;
 import java.util.List;

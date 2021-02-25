@@ -1,4 +1,4 @@
-package com.gai.array;
+package com.gai.interview.array;
 
 public class ArrayDemo {
 //    public static void main(String[] args) {

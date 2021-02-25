@@ -1,22 +1,40 @@
-package com.gai.linklist;
+package com.gai.interview.linklist;
 
-public class SingleLinkedList {
+public class DoublePointLinkedList {
     private int size;
     private Node head;
+    private Node tail;
 
-    public SingleLinkedList(){
+    public DoublePointLinkedList(){
         this.size = 0;
         this.head = null;
+        this.tail = null;
     }
 
-    public void add(Node node){
+    public void addHead(Node node){
         if(size == 0){
             this.head = node;
+            this.tail = node;
         }else {
             node.next = this.head;
             this.head = node;
         }
         this.size++;
+    }
+
+    public void addTail(Node node){
+        if(size == 0){
+            this.tail = node;
+            this.head = node;
+        }else {
+            this.tail.next = node;
+            this.tail = node;
+        }
+        this.size++;
+    }
+
+    public void add(Node node){
+        this.addHead(node);
     }
 
     public Object deleteHead(){
@@ -86,15 +104,18 @@ public class SingleLinkedList {
     }
 
     public static void main(String[] args) {
-        SingleLinkedList singleList = new SingleLinkedList();
-        singleList.add(new Node("A"));
-        singleList.add(new Node("B"));
-        singleList.add(new Node("C"));
-        singleList.add(new Node("D"));
+        DoublePointLinkedList doublePointLinkedList = new DoublePointLinkedList();
+        doublePointLinkedList.add(new Node("A"));
+        doublePointLinkedList.add(new Node("B"));
+        doublePointLinkedList.add(new Node("C"));
+        doublePointLinkedList.add(new Node("D"));
 
-        singleList.display();
-        singleList.delete("C");
-        singleList.display();
-        System.out.println(singleList.find("B"));
+        doublePointLinkedList.display();
+        doublePointLinkedList.delete("C");
+        doublePointLinkedList.display();
+
+        doublePointLinkedList.addTail(new Node("E"));
+        doublePointLinkedList.display();
+        System.out.println(doublePointLinkedList.find("B"));
     }
 }

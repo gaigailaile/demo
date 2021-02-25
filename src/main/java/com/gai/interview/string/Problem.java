@@ -1,4 +1,4 @@
-package com.gai.string;
+package com.gai.interview.string;
 
 public class Problem {
 

@@ -1,4 +1,4 @@
-package com.gai.linklist;
+package com.gai.interview.linklist;
 
 public class Node {
     Object data;

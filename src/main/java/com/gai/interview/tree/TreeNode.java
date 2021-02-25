@@ -1,4 +1,4 @@
-package com.gai.tree;
+package com.gai.interview.tree;
 
 public class TreeNode {
     int value;

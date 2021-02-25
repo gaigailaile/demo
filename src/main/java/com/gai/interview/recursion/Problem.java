@@ -1,4 +1,4 @@
-package com.gai.recursion;
+package com.gai.interview.recursion;
 
 public class Problem {
 
@@ -44,10 +44,30 @@ public class Problem {
         return result;
     }
 
+    /*
+    *   一只青蛙一次可以跳上1级台阶,也可以跳上2级。求该青蛙跳上一个n级的台阶总共有多少种跳法。
+    * */
+    public static int problem2(int n){
+        if(n < 3){
+            return n;
+        }
+        int result = 0;
+        int preOne = 2;
+        int preTwo = 1;
+        for (int i = 3; i <= n; i++){
+            result = preOne + preTwo;
+            preTwo = preOne;
+            preOne = result;
+        }
+        return result;
+    }
+
     public static void main(String[] args) {
         int a = Problem.problem1(5);
         System.out.println(a);
         int a1 = Problem.problem1(5,1);
         System.out.println(a1);
+        int a3 = Problem.problem2(4);
+        System.out.println(a3);
     }
 }

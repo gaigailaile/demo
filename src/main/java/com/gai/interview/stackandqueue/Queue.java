@@ -1,4 +1,4 @@
-package com.gai.stackandqueue;
+package com.gai.interview.stackandqueue;
 
 import java.util.Stack;
 
