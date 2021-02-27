@@ -107,11 +107,63 @@ public class Problem {
         return nextNode;
     }
 
+    /*
+    *   输入两棵二叉树 A，B，判断 B 是不是 A 的子结构。
+    * */
+    public static boolean problem3(TreeNode node,TreeNode target){
+        if(target == null){
+            return true;
+        }
+        if(node == null){
+            return false;
+        }
+        if(hasChild(node,target)){
+            return true;
+        }
+
+        return problem3(node.left,target) || problem3(node.right,target);
+    }
+
+    public static boolean hasChild(TreeNode node,TreeNode target){
+        if (target == null) {
+            return true;
+        }
+        if (node == null && target != null) {
+            return false;
+        }
+        if(node.value != target.value){
+            return false;
+        }
+        return hasChild(node.right,target.right) && hasChild(node.left,target.left);
+    }
+
     public static void main(String[] args) {
-        int[] pre = {1, 2, 4, 7, 3, 5, 6, 8};
-        int[] in = {4, 7, 2, 1, 5, 3, 8, 6};
-        int[] pos = {7, 4, 2, 5, 8, 6, 3, 1};
-        TreeNode treeNode = Problem.problem1(pre,in);
-        TreeNode.last(treeNode);
+//        int[] pre = {1, 2, 4, 7, 3, 5, 6, 8};
+//        int[] in = {4, 7, 2, 1, 5, 3, 8, 6};
+//        int[] pos = {7, 4, 2, 5, 8, 6, 3, 1};
+//        TreeNode treeNode = Problem.problem1(pre,in);
+//        TreeNode.last(treeNode);
+
+        TreeNode nodeRoot = new TreeNode(8);
+        TreeNode node1 = new TreeNode(8);
+        TreeNode node2 = new TreeNode(7);
+        nodeRoot.left = node1;
+        nodeRoot.right = node2;
+        TreeNode node3 = new TreeNode(9);
+        TreeNode node4 = new TreeNode(2);
+        node1.left = node3;
+        node1.right = node4;
+        TreeNode node5 = new TreeNode(4);
+        TreeNode node6 = new TreeNode(7);
+        node4.left = node5;
+        node4.right = node6;
+
+        TreeNode target = new TreeNode(8);
+        TreeNode targetLeft = new TreeNode(9);
+        TreeNode targetRight = new TreeNode(2);
+        target.left = targetLeft;
+        target.right = targetRight;
+
+        System.out.println(problem3(nodeRoot,target));
     }
 }
