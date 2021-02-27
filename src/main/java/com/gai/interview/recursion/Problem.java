@@ -62,12 +62,115 @@ public class Problem {
         return result;
     }
 
+    /*
+    *   问题3
+    *   给定一个 double 类型的浮点数 base 和 int 类型的整数 exponent。
+    *   求 base 的 exponent 次方。不得使用库函数，不需要考虑大数问题.
+    *
+    *   该方案没有考虑exponent为0或者负数的情况
+    * */
+    public static double problem3(double base,int exponent){
+        double result = 1.0;
+        for(int i = 1; i <= exponent; i++){
+            result *= base;
+        }
+        return result;
+    }
+
+    /*
+     *   问题3
+     *
+     *   该方案考虑exponent为0或者负数的情况
+     * */
+    public static double problem3(double base,int exponent,int a){
+        double result = 1.0;
+        if(doubleEqual(base,0.0)){
+            return 0.0;
+        }
+
+        if(exponent == 0){
+            return 1.0;
+        }
+        int absExponent = exponent;
+        if(exponent < 0){
+            absExponent = -exponent;
+        }
+        for(int i = 1; i <= absExponent; i++){
+            result *= base;
+        }
+
+        return exponent > 0 ? result:1.0/result;
+    }
+
+    public static boolean doubleEqual(double a, double b) {
+        if (a - b < 0.000001 && a - b > -0.000001) {
+            return true;
+        }
+        return false;
+    }
+
+    /*
+     *   问题3
+     *
+     *   比较好的解法推荐
+     * */
+    public static double problem3(double base,int exponent,String a){
+        if(exponent < 0){
+            base = 1/base;
+            exponent = -exponent;
+        }
+        if(exponent == 0){
+            return 1;
+        }
+        if(exponent == 1){
+            return base;
+        }
+        double result = problem3(base,exponent >> 1,"");
+        result = result * result;
+        if((exponent & 1) == 1){
+            result = result * base;
+        }
+
+        return result;
+    }
+
+    /*
+    *   输入数字 n，按顺序打印从 1 到最大的 n 位数十进制数，比如：输入 3，打印出 1 到 999.
+    * */
+    public static void problem4(int n){
+        int[] array=new int[n];
+        if(n <= 0)
+            return;
+        printArray(array, 0);
+    }
+
+    public static void printArray(int[] array, int n){
+        for(int i = 0; i < 10; i++) {
+            if(n != array.length) {
+                array[n] = i;
+                printArray(array, n+1);
+            } else {
+                boolean isFirstNo0 = false;
+                for(int j = 0; j < array.length; j++) {
+                    if(array[j] != 0) {
+                        System.out.print(array[j]);
+                        if(!isFirstNo0) isFirstNo0 = true;
+                    } else {
+                        if(isFirstNo0)
+                            System.out.print(array[j]);
+                    }
+                }
+                System.out.println();
+                return ;
+            }
+        }
+    }
+
     public static void main(String[] args) {
-        int a = Problem.problem1(5);
-        System.out.println(a);
-        int a1 = Problem.problem1(5,1);
-        System.out.println(a1);
-        int a3 = Problem.problem2(4);
-        System.out.println(a3);
+//        System.out.println(problem3(-2.0,2));
+//        System.out.println(problem3(3,-2,1));
+//        System.out.println(problem3(2.0,-2,1));
+//        System.out.println(problem3(2.0,-2,"1"));
+        problem4(3);
     }
 }
