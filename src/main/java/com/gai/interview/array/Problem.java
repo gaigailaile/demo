@@ -180,9 +180,70 @@ public class Problem {
         return false;
     }
 
+    /*
+    *   输入一个整数数组，实现一个函数来调整该数组中数字的顺序，使得所有的奇数位于数组的前半部分，所有的偶数位于位于数组的后半部分。
+    *
+    *   简单解法 两个指针指向首尾 并交换奇偶数
+    * */
+    public static void problem5(int[] array){
+        if(array == null || array.length == 0){
+            return;
+        }
+        int start = 0;
+        int end = array.length - 1;
+        while (start < end){
+            while (start < end && (array[start] & 1) == 1){
+                start++;
+            }
+            while (start < end && (array[end] & 1) == 0){
+                end--;
+            }
+            if(start < end){
+                int temp = array[start];
+                array[start] = array[end];
+                array[end] = temp;
+            }
+        }
+    }
+
+    /*
+    *   输入一个整数数组，实现一个函数来调整该数组中数字的顺序.
+    *   使得所有的奇数位于数组的前半部分，所有的偶数位于位于数组的后半部分.
+    *   并保证奇数和奇数，偶数和偶数之间的相对位置不变.
+    * */
+    public static void problem6(int[] array){
+        if(array == null || array.length == 0){
+            return;
+        }
+        int[] newArray = new int[array.length];
+        int index = 0;
+        for (int i = 0; i < array.length; i++){
+            if((array[i] & 1) ==1){
+                newArray[index] = array[i];
+                index++;
+            }
+        }
+        for(int i = 0; i < array.length; i++){
+            if((array[i] & 1) == 0){
+                newArray[index] = array[i];
+                index++;
+            }
+        }
+        for(int i = 0; i < array.length; i++){
+            array[i] = newArray[i];
+        }
+    }
+
     public static void main(String[] args) {
-        int[][] array = {{2,8,9},{7,9,12}};
-        boolean res = Problem.problem4(array,8);
-        System.out.println(res);
+//        int[][] array = {{2,8,9},{7,9,12}};
+//        boolean res = Problem.problem4(array,8);
+//        System.out.println(res);
+
+        int[] array = {1,2,3,4,5};
+        problem6(array);
+//        problem5(array);
+        for (int a: array) {
+            System.out.print(a + " ");
+        }
     }
 }
