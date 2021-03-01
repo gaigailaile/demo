@@ -137,6 +137,44 @@ public class Problem {
         return hasChild(node.right,target.right) && hasChild(node.left,target.left);
     }
 
+    /*
+    *   请完成一个函数，输入一棵二叉树，该函数输出它的镜像。
+    */
+    public static void problem4(TreeNode root){
+        if(root == null){
+            return;
+        }
+        if(root.left == null && root.right == null){
+            return;
+        }
+        TreeNode temp = root.left;
+        root.left = root.right;
+        root.right = temp;
+
+        problem4(root.left);
+        problem4(root.right);
+    }
+
+    /*
+    *   请实现一个函数，用来判断一颗二叉树是不是对称的。注意：如果一个二叉树同此二叉树的镜像是同样的，定义其为对称的。
+    * */
+    public static boolean problem5(TreeNode root){
+        return root == null || isImage(root.right,root.left);
+    }
+
+    public static boolean isImage(TreeNode root,TreeNode root2){
+        if(root == null && root2 == null){
+            return true;
+        }
+        if(root == null || root2 == null){
+            return false;
+        }
+        if(root.value != root2.value){
+            return false;
+        }
+        return isImage(root.right,root2.left) && isImage(root.left,root2.right);
+    }
+
     public static void main(String[] args) {
 //        int[] pre = {1, 2, 4, 7, 3, 5, 6, 8};
 //        int[] in = {4, 7, 2, 1, 5, 3, 8, 6};
@@ -145,25 +183,20 @@ public class Problem {
 //        TreeNode.last(treeNode);
 
         TreeNode nodeRoot = new TreeNode(8);
-        TreeNode node1 = new TreeNode(8);
-        TreeNode node2 = new TreeNode(7);
+        TreeNode node1 = new TreeNode(6);
+        TreeNode node2 = new TreeNode(6);
         nodeRoot.left = node1;
         nodeRoot.right = node2;
-        TreeNode node3 = new TreeNode(9);
-        TreeNode node4 = new TreeNode(2);
+        TreeNode node3 = new TreeNode(5);
+        TreeNode node4 = new TreeNode(7);
         node1.left = node3;
         node1.right = node4;
-        TreeNode node5 = new TreeNode(4);
-        TreeNode node6 = new TreeNode(7);
-        node4.left = node5;
-        node4.right = node6;
+        TreeNode node5 = new TreeNode(5);
+        TreeNode node6 = new TreeNode(5);
+        node2.left = node5;
+        node2.right = node6;
 
-        TreeNode target = new TreeNode(8);
-        TreeNode targetLeft = new TreeNode(9);
-        TreeNode targetRight = new TreeNode(2);
-        target.left = targetLeft;
-        target.right = targetRight;
+        System.out.println(problem5(nodeRoot));
 
-        System.out.println(problem3(nodeRoot,target));
     }
 }
