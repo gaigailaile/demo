@@ -1,6 +1,8 @@
 package com.gai.interview.tree;
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Problem {
 
@@ -175,6 +177,61 @@ public class Problem {
         return isImage(root.right,root2.left) && isImage(root.left,root2.right);
     }
 
+    /*
+    *   从上往下打印二叉树的每个节点，同一层的节点按照从左到右的顺序打印。
+    *   例如输入下图的二叉树，则一次打印出8，6，10，5，7，9，11。
+    * */
+    public static void problem6(TreeNode root){
+        if(root == null){
+            return;
+        }
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        while (!queue.isEmpty()){
+            TreeNode node = queue.poll();
+            System.out.print(node.value + " ");
+            if(node.left != null){
+                queue.add(node.left);
+            }
+            if(node.right != null){
+                queue.add(node.right);
+            }
+        }
+    }
+
+    /*
+    *   从上到下按层打印二叉树，同一层的节点按从左到右的顺序打印 ，每一层打印一行。
+    * */
+    public static void problem7(TreeNode root){
+        if(root == null){
+            return;
+        }
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        int nextLevelNum = 0;
+        int toBePrinted = 1;
+        while (!queue.isEmpty()){
+            TreeNode node = queue.poll();
+            System.out.print(node.value + " ");
+            if(node.left != null){
+                queue.add(node.left);
+                nextLevelNum++;
+            }
+            if(node.right != null){
+                queue.add(node.right);
+                nextLevelNum++;
+            }
+            toBePrinted--;
+            if(toBePrinted == 0){
+                toBePrinted = nextLevelNum;
+                nextLevelNum = 0;
+                System.out.println();
+            }
+        }
+    }
+
     public static void main(String[] args) {
 //        int[] pre = {1, 2, 4, 7, 3, 5, 6, 8};
 //        int[] in = {4, 7, 2, 1, 5, 3, 8, 6};
@@ -183,20 +240,20 @@ public class Problem {
 //        TreeNode.last(treeNode);
 
         TreeNode nodeRoot = new TreeNode(8);
-        TreeNode node1 = new TreeNode(6);
+        TreeNode node1 = new TreeNode(7);
         TreeNode node2 = new TreeNode(6);
         nodeRoot.left = node1;
         nodeRoot.right = node2;
         TreeNode node3 = new TreeNode(5);
-        TreeNode node4 = new TreeNode(7);
+        TreeNode node4 = new TreeNode(4);
         node1.left = node3;
         node1.right = node4;
-        TreeNode node5 = new TreeNode(5);
-        TreeNode node6 = new TreeNode(5);
+        TreeNode node5 = new TreeNode(3);
+        TreeNode node6 = new TreeNode(2);
         node2.left = node5;
         node2.right = node6;
 
-        System.out.println(problem5(nodeRoot));
+        problem7(nodeRoot);
 
     }
 }
