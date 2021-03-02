@@ -201,26 +201,78 @@ public class Problem {
         return preHead.next;
     }
 
+    /*
+    *   输入一个复杂链表（每个节点中有节点值，以及两个指针，一个指向下一个节点，另一个特殊指针指向任意一个节点）.
+    *   返回结果为复制后复杂链表的 head。（注意，输出结果中请不要返回参数中的节点引用，否则判题程序会直接返回空）.
+    *   节点定义如下 ComplexListNode
+    * */
+    public static ComplexListNode problem7(ComplexListNode head){
+        cloneNode(head);
+        connectSiblingNode(head);
+        return reconnectNode(head);
+    }
+
+    public static void cloneNode(ComplexListNode head){
+        ComplexListNode node = head;
+        while (node != null){
+            ComplexListNode clone = new ComplexListNode(node.value);
+            clone.next = node.next;
+            clone.sibling = null;
+
+            node.next = clone;
+            node = clone.next;
+        }
+    }
+
+    public static void connectSiblingNode(ComplexListNode head){
+        ComplexListNode node = head;
+        while (node != null){
+            ComplexListNode clone = node.next;
+            if(node.sibling != null){
+                clone.sibling = node.sibling.next;
+            }
+            node = clone.next;
+        }
+    }
+
+    public static ComplexListNode reconnectNode(ComplexListNode head){
+        ComplexListNode node = head;
+        ComplexListNode cloneHead = null;
+        ComplexListNode clone = null;
+
+        if(node != null){
+            cloneHead = node.next;
+            clone = node.next;
+            node.next = clone.next;
+            node = node.next;
+        }
+
+        while (node != null){
+            clone.next = node.next;
+            clone = clone.next;
+            node.next = clone.next;
+            node = node.next;
+        }
+
+        return cloneHead;
+    }
+
     public static void main(String[] args) {
-        ListNode node1_1= new ListNode(1);
-        ListNode node1_3 = new ListNode(3);
-        ListNode node1_5 = new ListNode(5);
-        ListNode node1_7 = new ListNode(7);
-        node1_1.next = node1_3;
-        node1_3.next = node1_5;
-        node1_5.next = node1_7;
+        ComplexListNode A = new ComplexListNode("A");
+        ComplexListNode B = new ComplexListNode("B");
+        ComplexListNode C = new ComplexListNode("C");
+        ComplexListNode D = new ComplexListNode("D");
+        ComplexListNode E = new ComplexListNode("E");
+        A.next = B;
+        B.next = C;
+        C.next = D;
+        D.next = E;
 
-        ListNode node2_2 = new ListNode(2);
-        ListNode node2_4 = new ListNode(4);
-        ListNode node2_6 = new ListNode(6);
-        ListNode node2_8 = new ListNode(8);
-        ListNode node2_9 = new ListNode(9);
-        node2_2.next = node2_4;
-        node2_4.next = node2_6;
-        node2_6.next = node2_8;
-        node2_8.next = node2_9;
+        A.sibling = C;
+        B.sibling = E;
+        D.sibling = B;
 
-        ListNode result = problem6(node1_1,node2_2,1);
-        result.print();
+        ComplexListNode result = problem7(A);
+        System.out.println();
     }
 }
