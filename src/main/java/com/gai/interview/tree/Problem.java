@@ -1,8 +1,8 @@
 package com.gai.interview.tree;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
+import org.apache.spark.sql.sources.In;
+
+import java.util.*;
 
 public class Problem {
 
@@ -178,6 +178,7 @@ public class Problem {
     }
 
     /*
+    *   问题6
     *   从上往下打印二叉树的每个节点，同一层的节点按照从左到右的顺序打印。
     *   例如输入下图的二叉树，则一次打印出8，6，10，5，7，9，11。
     * */
@@ -198,6 +199,32 @@ public class Problem {
                 queue.add(node.right);
             }
         }
+    }
+
+    /*
+    *   问题6 递归方式
+    * */
+    public static ArrayList<Integer> problem6(TreeNode root,int a) {
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        if (root == null) {
+            return list;
+        }
+        list.add(root.value);
+        levelOrder(root, list);
+        return list;
+    }
+
+    public static void levelOrder(TreeNode root, ArrayList<Integer> list) {
+        if (root == null) {
+            return;
+        }if (root.left != null) {
+            list.add(root.left.value);
+        }
+        if (root.right != null) {
+            list.add(root.right.value);
+        }
+        levelOrder(root.left, list);
+        levelOrder(root.right, list);
     }
 
     /*
@@ -232,28 +259,221 @@ public class Problem {
         }
     }
 
-    public static void main(String[] args) {
-//        int[] pre = {1, 2, 4, 7, 3, 5, 6, 8};
-//        int[] in = {4, 7, 2, 1, 5, 3, 8, 6};
-//        int[] pos = {7, 4, 2, 5, 8, 6, 3, 1};
-//        TreeNode treeNode = Problem.problem1(pre,in);
-//        TreeNode.last(treeNode);
+    /*
+    *   请实现一个函数按照之字形打印二叉树.
+    *   即第一行按照从左到右的顺序打印.
+    *   第二层按照从右至左的顺序打印.
+    *   第三行按照从左到右的顺序打印，依此类推。
+    * */
+    public static void problem8(TreeNode root){
+        if(root == null){
+            return;
+        }
+        //奇数行
+        Stack<TreeNode> stack1 = new Stack<>();
+        stack1.push(root);
+        //偶数行
+        Stack<TreeNode> stack2 = new Stack<>();
+        int level = 1;
+        while (!stack1.isEmpty() || !stack2.isEmpty()){
+            if((level & 1) == 1){
+                while (!stack1.isEmpty()){
+                    TreeNode temp = stack1.pop();
+                    if(temp.left != null){
+                        stack2.push(temp.left);
+                    }
+                    if(temp.right != null){
+                        stack2.push(temp.right);
+                    }
+                    System.out.print(temp.value + " ");
+                }
+                level++;
+                System.out.println();
+            }else {
+                while (!stack2.isEmpty()){
+                    TreeNode temp = stack2.pop();
+                    if(temp.right != null){
+                        stack1.push(temp.right);
+                    }
+                    if(temp.left != null){
+                        stack1.push(temp.left);
+                    }
+                    System.out.print(temp.value + " ");
+                }
+                level++;
+                System.out.println();
+            }
+        }
+    }
 
-        TreeNode nodeRoot = new TreeNode(8);
-        TreeNode node1 = new TreeNode(7);
-        TreeNode node2 = new TreeNode(6);
-        nodeRoot.left = node1;
-        nodeRoot.right = node2;
-        TreeNode node3 = new TreeNode(5);
-        TreeNode node4 = new TreeNode(4);
+    /*
+    *   输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历的结果。
+    *   如果是则输出 Yes,否则输出 No。假设输入的数组的任意两个数字都互不相同。
+    * */
+    public static boolean problem9(int[] array){
+        if(array == null || array.length == 0){
+            return false;
+        }
+        int len = array.length - 1;
+        int root = array[len];
+
+        int i = 0;
+        for (; i < len; i++){
+            if(array[i] > root){
+                break;
+            }
+        }
+
+        int j = i;
+        for (; j < len; j++){
+            if(array[j] < root){
+                return false;
+            }
+        }
+
+        boolean left = true;
+        if(i > 0){
+            left = problem9(Arrays.copyOfRange(array,0,i));
+        }
+
+        boolean right = true;
+        if(i < len){
+            right = problem9(Arrays.copyOfRange(array,i,len));
+        }
+
+        return left && right;
+    }
+
+    /*
+    *   输入一颗二叉树和一个整数，打印出二叉树中结点值的和为输入整数的所有路径。
+    *   路径定义为从树的根结点开始往下一直到叶结点所经过的结点形成一条路径。
+    * */
+    public static ArrayList<ArrayList<Integer>> problem10(TreeNode root, int target){
+        if(root == null){
+            return null;
+        }
+        ArrayList<ArrayList<Integer>> listAll = new ArrayList<>();
+        ArrayList<Integer> list = new ArrayList<>();
+        findPath(root,target,listAll,list);
+
+        return listAll;
+    }
+
+    public static void findPath(TreeNode node,int target,ArrayList<ArrayList<Integer>> all,ArrayList<Integer> list){
+        if(node == null){
+            return;
+        }
+        list.add(node.value);
+        target -= node.value;
+        if(target == 0 && node.right == null && node.left == null){
+            all.add(new ArrayList<>(list));
+        }
+        findPath(node.right,target,all,list);
+        findPath(node.left,target,all,list);
+        list.remove(list.size() - 1);
+    }
+
+    /*
+    *   问题11
+    *   输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。
+    *   要求不能创建任何新的结点，只能调整树中结点指针的指向。\
+    *
+    *   递归
+    * */
+    static TreeNode head = null;
+    static TreeNode realHead = null;
+
+    public static TreeNode problem11(TreeNode treeNode) {
+        if (treeNode == null) {
+            return null;
+        }
+        problem11(treeNode.left); //左
+
+        if (head == null) { //根
+            head = treeNode;
+            realHead = treeNode;
+        } else {
+            head.right = treeNode;
+            treeNode.left = head;
+            head = treeNode;
+        }
+
+        problem11(treeNode.right); //右
+        return realHead;
+    }
+
+    /*
+    *   问题11
+    *
+    *   递归2
+    * */
+    public static TreeNode problem11(TreeNode treeNode,String i) {
+        if (treeNode == null) {
+            return null;
+        }
+        problem11(treeNode.left); //左
+
+        if (head == null) { //根
+            head = treeNode;
+            realHead = treeNode;
+        } else {
+            head.right = treeNode;
+            treeNode.left = head;
+            head = treeNode;
+        }
+
+        problem11(treeNode.right); //右
+        return realHead;
+    }
+
+    /*
+    *   问题11
+    *   非递归使用栈实现
+    * */
+    public static TreeNode problem11(TreeNode treeNode,int a) {
+        if (treeNode == null) {
+            return null;
+        }
+        TreeNode current = null;
+        Stack<TreeNode> stack = new Stack<>();
+        while (treeNode != null || !stack.isEmpty()){
+            if(treeNode != null){
+                stack.push(treeNode);
+                treeNode = treeNode.right;
+            }else {
+                treeNode = stack.pop();
+                if(current == null){
+                    current = treeNode;
+                }else {
+                    current.left = treeNode;
+                    treeNode.right = current;
+                    current = treeNode;
+                }
+                treeNode = treeNode.left;
+            }
+        }
+        return current;
+    }
+
+    public static void main(String[] args) {
+        TreeNode root = new TreeNode(10);
+        TreeNode node1 = new TreeNode(6);
+        TreeNode node2 = new TreeNode(14);
+        root.left = node1;
+        root.right = node2;
+        TreeNode node3 = new TreeNode(4);
+        TreeNode node4 = new TreeNode(8);
         node1.left = node3;
         node1.right = node4;
-        TreeNode node5 = new TreeNode(3);
-        TreeNode node6 = new TreeNode(2);
+        TreeNode node5 = new TreeNode(12);
+        TreeNode node6 = new TreeNode(16);
         node2.left = node5;
         node2.right = node6;
 
-        problem7(nodeRoot);
+//        TreeNode result = problem11(root);
 
+        TreeNode result = problem11(root,1);
+
+        System.out.println();
     }
 }
