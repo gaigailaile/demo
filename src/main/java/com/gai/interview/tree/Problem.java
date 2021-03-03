@@ -1,7 +1,5 @@
 package com.gai.interview.tree;
 
-import org.apache.spark.sql.sources.In;
-
 import java.util.*;
 
 public class Problem {
@@ -408,23 +406,32 @@ public class Problem {
     *   递归2
     * */
     public static TreeNode problem11(TreeNode treeNode,String i) {
-        if (treeNode == null) {
+        TreeNode lastNode = covert(treeNode,null);
+        TreeNode head = lastNode;
+        while (head != null && head.left != null){
+            head = head.left;
+        }
+        return head;
+    }
+
+    public static TreeNode covert(TreeNode current,TreeNode lastNode){
+        if(current == null){
             return null;
         }
-        problem11(treeNode.left); //左
-
-        if (head == null) { //根
-            head = treeNode;
-            realHead = treeNode;
-        } else {
-            head.right = treeNode;
-            treeNode.left = head;
-            head = treeNode;
+        if(current.left != null){
+            lastNode = covert(current.left,lastNode);
         }
-
-        problem11(treeNode.right); //右
-        return realHead;
+        current.left = lastNode;
+        if(lastNode != null){
+            lastNode.right = current;
+        }
+        lastNode = current;
+        if(current.right != null){
+            lastNode = covert(current.right,lastNode);
+        }
+        return lastNode;
     }
+
 
     /*
     *   问题11
@@ -455,25 +462,87 @@ public class Problem {
         return current;
     }
 
-    public static void main(String[] args) {
-        TreeNode root = new TreeNode(10);
-        TreeNode node1 = new TreeNode(6);
-        TreeNode node2 = new TreeNode(14);
+    /*
+    *   请实现两个函数，分别用来序列化和反序列化二叉树
+    * */
+    public static void problem12(){
+        TreeNode root = new TreeNode(1);
+        TreeNode node1 = new TreeNode(2);
+        TreeNode node2 = new TreeNode(3);
         root.left = node1;
         root.right = node2;
         TreeNode node3 = new TreeNode(4);
-        TreeNode node4 = new TreeNode(8);
         node1.left = node3;
-        node1.right = node4;
-        TreeNode node5 = new TreeNode(12);
-        TreeNode node6 = new TreeNode(16);
+        TreeNode node5 = new TreeNode(5);
+        TreeNode node6 = new TreeNode(6);
         node2.left = node5;
         node2.right = node6;
 
-//        TreeNode result = problem11(root);
-
-        TreeNode result = problem11(root,1);
-
+        String str = serialize(root);
+        System.out.println(serialize(root));
+        TreeNode result = deserialize(str,0);
         System.out.println();
+    }
+
+    //序列化
+    public static String serialize(TreeNode root){
+        StringBuffer str = new StringBuffer();
+        if(root == null){
+            str.append("#,");
+            return str.toString();
+        }
+        str.append(root.value+",");
+        str.append(serialize(root.left));
+        str.append(serialize(root.right));
+        return str.toString();
+    }
+
+    //反序列化
+    public static int index = -1;
+    public static TreeNode deserialize(String str){
+        if(str == null || str.length() == 0){
+            return null;
+        }
+        index++;
+        String[] strings = str.split(",");
+        TreeNode node = null;
+        if(index >= str.length()){
+            return null;
+        }
+        if(!"#".equals(strings[index])){
+            node = new TreeNode(Integer.valueOf(strings[index]));
+            node.left = deserialize(str);
+            node.right = deserialize(str);
+        }
+        return node;
+    }
+
+    /*
+    *   不需要index辅助的方法
+    * */
+    public static TreeNode deserialize(String str,int a){
+        if(str == null || str.length() == 0){
+            return null;
+        }
+        String[] strings = str.split(",");
+        Queue<String> queue = new LinkedList<String>();
+        for(int i = 0; i < strings.length; i++){
+            queue.offer(strings[i]);
+        }
+        return deserialize(queue);
+    }
+
+    public static TreeNode deserialize(Queue<String> queue){
+        String val = queue.poll();
+        if("#".equals(val))
+            return null;
+        TreeNode node = new TreeNode(Integer.parseInt(val));
+        node.left = deserialize(queue);
+        node.right = deserialize(queue);
+        return node;
+    }
+
+    public static void main(String[] args) {
+        problem12();
     }
 }
