@@ -1,5 +1,8 @@
 package com.gai.interview.string;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class Problem {
 
     /*
@@ -73,7 +76,6 @@ public class Problem {
         return false;
     }
 
-
     /*
     *   请实现一个函数用来判断字符串是否表示数值（包括整数和小数）
     * */
@@ -122,13 +124,47 @@ public class Problem {
         return true;
     }
 
+    /*
+    *   输入一个字符串,按字典序打印出该字符串中字符的所有排列。
+    *   例如输入字符串 abc,则打印出由字符 a,b,c 所能排列出来的所有字符串 abc,acb,bac,bca,cab和cba。
+     * */
+    public static ArrayList<String> problem4(String str){
+        ArrayList<String> list = new ArrayList<>();
+        if(str != null && str.length() != 0){
+            helper(str.toCharArray(), 0, list);
+//            Collections.sort(list);//对所得的list集合进行排序
+        }
+        return list;
+    }
+
+    public static void helper(char[] chars, int i, ArrayList<String> list){
+        if(i == chars.length - 1){
+            String value = String.valueOf(chars);
+            //如果list集合中不包含这个字符串，则添加（避免重复）
+            if(!list.contains(value)){
+                list.add(value);
+            }
+        }else {
+            for (int j = i; j < chars.length; j++){
+                //交换数组第i个字符和第j个字符
+                swap(chars,i,j);
+                helper(chars,i + 1,list);
+                //再次交换数组第i个字符和第j个字符，保证回到此次for循环前字符数组的状态，不影响字符数组进行下一次for循环
+                swap(chars,i,j);
+            }
+        }
+    }
+
+    public static void swap(char[] chars, int i, int j){
+        char temp = chars[i];
+        chars[i] = chars[j];
+        chars[j] = temp;
+    }
+
     public static void main(String[] args) {
-//        String str = "We are happy.";
-//        str = Problem.problem1(str);
-//        System.out.println(str);
-
-//        System.out.println(problem2("aaa","aa*aa"));
-
-        System.out.println(problem3("E12"));
+        ArrayList<String> list = problem4("abc");
+        for (String str:list) {
+            System.out.print(str + " ");
+        }
     }
 }
