@@ -3,6 +3,7 @@ package com.gai.interview.array;
 import org.apache.spark.sql.sources.In;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Problem {
@@ -283,17 +284,29 @@ public class Problem {
         return result;
     }
 
-    public static void main(String[] args) {
-//        int[][] array = {{2,8,9},{7,9,12}};
-//        boolean res = Problem.problem4(array,8);
-//        System.out.println(res);
-        int[][] array = {{1,2,3,4},
-                {5,6,7,8},
-                {9,10,11,12},
-                {13,14,15,16}};
-        List<Integer> list = problem7(array);
-        for (int a:list) {
-            System.out.print(a + " ");
+    /*
+    *   问题8
+    *   数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。如果不存在则输出 0。
+    *
+    *   hashMap 解法
+    * */
+    public static int problem8(int[] array){
+        HashMap<Integer,Integer> hashMap = new HashMap<>();
+        for (int num:array) {
+            if(hashMap.containsKey(num)){
+                hashMap.put(num,hashMap.getOrDefault(num,0) + 1);
+            }else {
+                hashMap.put(num,1);
+            }
+
+            if(hashMap.get(num) > array.length/2 ){
+                return num;
+            }
         }
+        return 0;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(problem8(new int[]{1, 2, 3, 2, 2, 2, 5, 4, 2}));
     }
 }
