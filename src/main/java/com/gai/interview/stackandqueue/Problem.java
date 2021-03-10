@@ -1,5 +1,7 @@
 package com.gai.interview.stackandqueue;
 
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Stack;
 
 public class Problem {
@@ -72,8 +74,41 @@ public class Problem {
         return temp.isEmpty();
     }
 
+    /*
+    *   如何得到一个数据流中的中位数？
+    *   如果从数据流中读出奇数个数值，那么中位数就是所有数值排序之后位于中间的数值。
+    *   如果从数据流中读出偶数个数值，那么中位数就是所有数值排序之后中间两个数的平均值。
+    *
+    * */
+    public static void problem5(){
+        class MedianFinder{
+            Queue<Integer> min,max;
+
+            public MedianFinder(){
+                //存放大值 值都比min中的大
+                max = new PriorityQueue<>();
+                //存放小值
+                min = new PriorityQueue<>((v1,v2) -> v2-v1);
+            }
+
+            public void addNum(int num){
+                if(min.size() != max.size()){
+                    max.add(num);
+                    min.add(max.poll());
+                }else {
+                    min.add(num);
+                    max.add(min.poll());
+                }
+            }
+
+            public double findMedian(){
+                return max.size() != min.size() ? max.peek() : (max.peek() + min.peek())/2.0;
+            }
+        }
+    }
+
     public static void main(String[] args) {
-        System.out.println(problem4(new int[]{1,2,3,4,5},new int[]{4,5,3,2,1}));
+        problem5();
     }
 }
 

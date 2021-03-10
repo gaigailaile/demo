@@ -166,11 +166,67 @@ public class Problem {
         }
     }
 
+    /*
+    *   输入一个整数 n ，求1～n这n个整数的十进制表示中1出现的次数。
+    *   例如，输入12，1～12这些整数中包含1 的数字有1、10、11和12，1一共出现了5次。
+    * */
+    public static int problem5(int num){
+        int count = 0;
+        long i = 1;        // 从个位开始遍历到最高位
+        while(num / i != 0) {
+            long high = num / (10 * i);  // 高位
+            long cur = (num / i) % 10;   // 当前位
+            long low = num - (num / i) * i;
+            if(cur == 0) {
+                count += high * i;
+            }else if(cur == 1) {
+                count += high * i + (low + 1);
+            }else {
+                count += (high + 1) * i;
+            }
+            i = i * 10;
+        }
+        return count;
+    }
+
+    /*
+    *   数字以0123456789101112131415…的格式序列化到一个字符序列中。
+    *   在这个序列中，第5位（从下标0开始计数）是5，第13位是1，第19位是4，等等。
+    *   请写一个函数，求任意第n位对应的数字。
+    * */
+    public static int problem6(int n){
+        int digit = 1;   // n所在数字的位数
+        long start = 1;  // 数字范围开始的第一个数
+        long count = 9;  // 占多少位
+        while (n > count){
+            n -= count;
+            digit++;
+            start *= 10;
+            count = start * digit * 9;
+        }
+        long num = start + (n - 1) / digit;
+        return String.valueOf(num).charAt((n - 1) % digit) - '0';
+    }
+
+    /*
+    *   我们把只包含质因子 2、3 和 5 的数称作丑数（Ugly Number）。
+    *   求按从小到大的顺序的第 n 个丑数。
+    * */
+    public static int problem7(int n){
+        int a = 0, b = 0, c = 0;
+        int[] dp = new int[n];
+        dp[0] = 1;
+        for (int i = 1; i < n; i++){
+            int n2 = dp[a] * 2, n3 = dp[b] * 3, n5 = dp[c] * 5;
+            dp[i] = Math.min(Math.min(n2,n3),n5);
+            if(dp[i] == n2) a++;
+            if(dp[i] == n3) b++;
+            if(dp[i] == n5) c++;
+        }
+        return dp[n-1];
+    }
+
     public static void main(String[] args) {
-//        System.out.println(problem3(-2.0,2));
-//        System.out.println(problem3(3,-2,1));
-//        System.out.println(problem3(2.0,-2,1));
-//        System.out.println(problem3(2.0,-2,"1"));
-        problem4(3);
+        System.out.println(problem6(0));
     }
 }

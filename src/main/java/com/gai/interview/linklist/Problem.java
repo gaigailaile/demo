@@ -257,6 +257,19 @@ public class Problem {
         return cloneHead;
     }
 
+    /*
+    *   输入两个链表，找出它们的第一个公共节点。
+    * */
+    public static ListNode problem8(ListNode headA,ListNode headB){
+        ListNode A = headA;
+        ListNode B = headB;
+        while (A != B){
+            A = (A != null ? A.next : headB);
+            B = (B != null ? B.next : headA);
+        }
+        return A;
+    }
+
     public static void main(String[] args) {
         ComplexListNode A = new ComplexListNode("A");
         ComplexListNode B = new ComplexListNode("B");

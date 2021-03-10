@@ -2,9 +2,7 @@ package com.gai.interview.array;
 
 import org.apache.spark.sql.sources.In;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class Problem {
     //下列代码输出情况
@@ -306,7 +304,272 @@ public class Problem {
         return 0;
     }
 
+    /*
+    *   问题9
+    *
+    *   输入 n 个整数，找出其中最小的 K 个数。
+    *   例如输入4、5、1、6、2、7、3、8这8个数字，则最小的4个数字是1、2、3、4。
+    *
+    *   使K左边的数值比K小右边比K值大
+    * */
+    public static ArrayList<Integer> problem9(int[] array,int k){
+        if(array == null || array.length == 0 || k <= 0){
+            return null;
+        }
+        ArrayList<Integer> result = new ArrayList<>();
+        int low = 0;
+        int high = array.length - 1;
+        int index = partition(array,low,high);
+
+        while (index != k-1){
+            if(index > k-1){
+                high = index - 1;
+                index = partition(array,low,high);
+            }else {
+                low = index + 1;
+                index = partition(array,low,high);
+            }
+        }
+
+        for (int i = 0; i < k; i++)
+            result.add(array[i]);
+
+        return result;
+    }
+
+    public static int partition(int[] array,int low,int high){
+        int temp = array[low];
+        while (low != high){
+            while (low < high && array[high] >= temp)
+                high--;
+            array[low] = array[high];
+            while (low < high && array[low] <= temp)
+                low++;
+            array[high] = array[low];
+        }
+        array[low] = temp;
+        return low;
+    }
+
+    /*
+    *   问题9
+    *
+    *   使用大根堆解决
+    * */
+    public static int[] problem9(int[] array,int k,String queueType){
+        if(array == null || array.length == 0 || k <= 0){
+            return null;
+        }
+        Queue<Integer> queue = new PriorityQueue<>(k,(v1,v2) -> v2 - v1);
+        for (int i = 0; i < array.length; i++){
+            if(queue.size() < k){
+                queue.offer(array[i]);
+            }else if(queue.size() == k && array[i] < queue.peek()){
+                queue.poll();
+                queue.offer(array[i]);
+            }
+        }
+        int[] result = new int[queue.size()];
+        int index = 0;
+        for (int i:queue) {
+            result[index++] = i;
+        }
+
+        return result;
+    }
+
+    /*
+    *   输入一个整型数组，数组中有正数也有负数，数组中一个或连续的多个整数组成一个子数组，求连续子数组的最大和
+    * */
+    public static int problem10(int[] array){
+        if(array == null || array.length == 0){
+            return 0;
+        }
+        int sum = 0;
+        int result = array[0];
+        for (int num:array){
+            sum = sum > 0 ? sum + num : num;
+            result = Math.max(sum,result);
+        }
+        return result;
+    }
+
+    /*
+    *   输入一个非负整数数组，把数组里所有数字拼接起来排成一个数，打印能拼接出的所有数字中最小的一个。
+    * */
+    public static String problem11(int[] array){
+        String[] str = new String[array.length];
+        for (int i = 0; i < array.length; i++)
+            str[i] = String.valueOf(array[i]);
+        Arrays.sort(str,(x,y) -> (x+y).compareTo(y+x));
+        StringBuffer stringBuffer = new StringBuffer();
+        for (String s:str) {
+            stringBuffer.append(s);
+        }
+        return stringBuffer.toString();
+    }
+
+    /*
+    *   问题12
+    *
+    *   在一个 m*n 的棋盘的每一格都放有一个礼物，每个礼物都有一定的价值（价值大于 0）。
+    *   你可以从棋盘的左上角开始拿格子里的礼物，并每次向右或者向下移动一格、直到到达棋盘的右下角。
+    *   给定一个棋盘及其上面的礼物的价值，请计算你最多能拿到多少价值的礼物？
+    *
+    * */
+    public static int problem12(int[][] array){
+        int row = array.length;
+        int col = array[0].length;
+
+        for (int i = 0; i < row; i++){
+            for (int j = 0; j < col; j++){
+                if(i == 0 && j == 0)
+                    continue;
+                if(i == 0)
+                    array[i][j] += array[i][j - 1];
+                else if(j == 0)
+                    array[i][j] += array[i - 1][j];
+                else
+                    array[i][j] += Math.max(array[i][j - 1],array[i - 1][j]);
+            }
+        }
+
+        return array[row-1][col-1];
+    }
+
+    /*
+    *   问题12
+    *
+    *   升级版
+    * */
+    public static int problem12(int[][] array,int a){
+        int row = array.length;
+        int col = array[0].length;
+
+        for (int i = 1; i < col; i++)
+            array[0][i] += array[0][i - 1];
+
+        for (int i = 1; i < row; i++)
+            array[i][0] += array[i-1][0];
+
+        for (int i = 1; i < row; i++)
+            for (int j = 1; j < col; j++)
+                array[i][j] += Math.max(array[i - 1][j],array[i][j - 1]);
+
+        return array[row-1][col-1];
+    }
+
+    /*
+    *   在数组中的两个数字，如果前面一个数字大于后面的数字，则这两个数字组成一个逆序对。
+    *   输入一个数组，求出这个数组中的逆序对的总数。
+    * */
+    public static int problem13(int[] nums){
+        int len = nums.length;
+        if(len < 2){
+            return 0;
+        }
+        int[] copy = new int[len];
+        for (int i = 0; i < len; i++){
+            copy[i] = nums[i];
+        }
+        int[] temp = new int[len];
+        return reversePairs(copy,0,len-1,temp);
+    }
+
+    private static int reversePairs(int[] nums, int left, int right, int[] temp){
+        if(left == right){
+            return 0;
+        }
+        //计算中间值，可以防止溢出
+        int mid = left + (right - left) / 2;
+        int leftPairs = reversePairs(nums,left,mid,temp);
+        int rightPairs = reversePairs(nums,mid+1,right,temp);
+
+        if(nums[mid] <= nums[mid + 1]){
+            return leftPairs + rightPairs;
+        }
+
+        int countPairs = mergeAndCount(nums,left,mid,right,temp);
+        return leftPairs + rightPairs + countPairs;
+    }
+
+    private static int mergeAndCount(int[] nums,int left,int mid,int right,int[] temp){
+        for (int i = left; i <= right; i++){
+            temp[i] = nums[i];
+        }
+        int i = left;
+        int j = mid + 1;
+
+        int count = 0;
+        for (int k = left; k <= right; k++){
+            if(i == mid + 1){
+                nums[k] = temp[j];
+                j++;
+            }else if(j == right + 1){
+                nums[k] = temp[i];
+                i++;
+            }else if(temp[i] <= temp[j]){
+                nums[k] = temp[i];
+                i++;
+            }else {
+                nums[k] = temp[j];
+                j++;
+                count += (mid - i + 1);
+            }
+        }
+        return count;
+    }
+
+    /*
+    *   统计一个数字在排序数组中出现的次数。
+    * */
+    public static int problem14(int[] nums,int target){
+        //探索右边界
+        int i = 0,j = nums.length - 1;
+        while (i <= j){
+            int m = (i + j) / 2;
+            if(nums[m] <= target){
+                i = m + 1;
+            }else {
+                j = m - 1;
+            }
+        }
+        //没有target直接返回
+        if(j >= 0 && nums[j] != target) return 0;
+        int right = i;
+
+        //探索左边界
+        i = 0;
+        j = nums.length - 1;
+        while (i <= j){
+            int m = (i + j) / 2;
+            if(nums[m] < target){
+                i = m + 1;
+            }else {
+                j = m - 1;
+            }
+        }
+        int left = j;
+        return right - left - 1;
+    }
+
+    /*
+    *   问题14 优化版
+    * */
+    public static int problem14(int[] nums,int target,int a){
+        return helper(nums,target) - helper(nums,target-1);
+    }
+
+    private static int helper(int[] nums,int target){
+        int i = 0,j = nums.length - 1;
+        while (i <= j){
+            int m = (i + j)/2;
+            if(nums[m] <= target) i = m + 1;
+            else j = m - 1;
+        }
+        return i;
+    }
+
     public static void main(String[] args) {
-        System.out.println(problem8(new int[]{1, 2, 3, 2, 2, 2, 5, 4, 2}));
     }
 }

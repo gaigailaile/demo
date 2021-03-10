@@ -1,7 +1,6 @@
 package com.gai.interview.string;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 
 public class Problem {
 
@@ -161,10 +160,56 @@ public class Problem {
         chars[j] = temp;
     }
 
-    public static void main(String[] args) {
-        ArrayList<String> list = problem4("abc");
-        for (String str:list) {
-            System.out.print(str + " ");
+    /*
+    *   给定一个数字，我们按照如下规则把它翻译为字符串：
+    *   0 翻译成 “a” ，1 翻译成 “b”，……，11 翻译成 “l”，……，25 翻译成 “z”。一个数字可能有多个翻译。
+    *   请编程实现一个函数，用来计算一个数字有多少种不同的翻译方法。
+    * */
+    public static int problem5(int num){
+        String numStr = String.valueOf(num);
+        int a = 1, b = 1;
+
+        for (int i = 2; i <= numStr.length(); i++){
+            String temp = numStr.substring(i-2,i);
+            int c = "10".compareTo(temp) <=0 && "25".compareTo(temp) >=0 ? a + b : a;
+            b = a;
+            a = c;
         }
+
+        return a;
+    }
+
+    /*
+    *   请从字符串中找出一个最长的不包含重复字符的子字符串，计算该最长子字符串的长度。
+    *   例如，在字符串“arabcacfr”中，最长的不含重复字符的子字符串是"acfr"，长度为4。
+    * */
+    public static int problem6(String str){
+        Map<Character,Integer> map = new HashMap<>();
+        int res = 0,temp = 0;
+        for (int j = 0; j < str.length(); j++){
+            int i = map.getOrDefault(str.charAt(j),-1);
+            map.put(str.charAt(j),j);
+            temp = temp < j - i ? temp + 1 : j - i;
+            res = Math.max(res,temp);
+        }
+        return res;
+    }
+
+    /*
+    *   在字符串 s 中找出第一个只出现一次的字符。
+    *   如果没有，返回一个单空格。 s 只包含小写字母。
+    * */
+    public static char problem7(String s){
+        HashMap<Character,Boolean> dic = new HashMap<>();
+        char[] chars = s.toCharArray();
+        for (char c : chars)
+            dic.put(c,!dic.containsKey(c));
+        for (char c : chars)
+            if(dic.get(c)) return c;
+        return ' ';
+    }
+
+    public static void main(String[] args) {
+        System.out.println(problem5(11001));
     }
 }
