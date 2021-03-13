@@ -47,6 +47,20 @@ public class Problem {
         return count;
     }
 
+    /*
+    *   问题2 不用加减乘除做加法
+    *
+    *   写一个函数，求两个整数之和，要求在函数体内不得使用 “+”、“-”、“*”、“/” 四则运算符号。
+    * */
+    public static int problem2(int a, int b){
+        while(b != 0) { // 当进位为 0 时跳出
+            int c = (a & b) << 1;  // c = 进位
+            a ^= b; // a = 非进位和
+            b = c; // b = 进位
+        }
+        return a;
+    }
+
     public static void main(String[] args) {
         System.out.println(problem1(7));
         System.out.println(problem1(4,0));

@@ -1,6 +1,6 @@
 package com.gai.interview.stackandqueue;
 
-import java.util.PriorityQueue;
+import java.util.*;
 import java.util.Queue;
 import java.util.Stack;
 
@@ -104,6 +104,57 @@ public class Problem {
             public double findMedian(){
                 return max.size() != min.size() ? max.peek() : (max.peek() + min.peek())/2.0;
             }
+        }
+    }
+
+    /*
+    *   问题6 I 滑动窗口的最大值
+    *
+    *   给定一个数组nums 和滑动窗口的大小k，请找出所有滑动窗口里的最大值。
+    * */
+    public static int[] problem6(){
+        return null;
+    }
+
+    /*
+     *   问题6 II 队列的最大值
+     *
+     *   请定义一个队列并实现函数 max_value 得到队列里的最大值，要求函数max_value、push_back 和 pop_front 的均摊时间复杂度都是O(1)。
+     *   若队列为空，pop_front 和 max_value 需要返回 -1
+     * */
+    class MaxQueue {
+        Queue<Integer> q;
+        Deque<Integer> d;
+
+        public MaxQueue() {
+            q = new LinkedList<Integer>();
+            d = new LinkedList<Integer>();
+        }
+
+        public int max_value() {
+            if (d.isEmpty()) {
+                return -1;
+            }
+            return d.peekFirst();
+        }
+
+        public void push_back(int value) {
+            while (!d.isEmpty() && d.peekLast() < value) {
+                d.pollLast();
+            }
+            d.offerLast(value);
+            q.offer(value);
+        }
+
+        public int pop_front() {
+            if (q.isEmpty()) {
+                return -1;
+            }
+            int ans = q.poll();
+            if (ans == d.peekFirst()) {
+                d.pollFirst();
+            }
+            return ans;
         }
     }
 

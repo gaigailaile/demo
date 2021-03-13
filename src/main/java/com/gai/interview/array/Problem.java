@@ -570,6 +570,210 @@ public class Problem {
         return i;
     }
 
+    /*
+    *   问题14 II
+    *   一个长度为n-1的递增排序数组中的所有数字都是唯一的，并且每个数字都在范围0～n-1之内。
+    *   在范围0～n-1内的n个数字中有且只有一个数字不在该数组中，请找出这个数字。
+    * */
+    public static int problem14(int[] nums){
+        if(nums == null || nums.length == 0){
+            return -1;
+        }
+        int left = 0;
+        int right = nums.length - 1;
+        while (left <= right){
+            int mid = (right + left) >> 1;
+            if(nums[mid] != mid){
+                if(mid == 0 || nums[mid - 1] == mid - 1){
+                    return mid;
+                }
+                right = mid - 1;
+            }else {
+                left = mid + 1;
+            }
+        }
+        if(left == nums.length)
+            return nums.length;
+        return -1;
+    }
+
+    /*
+    *   问题14 II 二分法简化版
+    * */
+    public static int problem14(int[] nums,String a){
+        int left = 0, right = nums.length - 1;
+        while (left <= right){
+            int mid = (left + right) >> 1;
+            if(nums[mid] == mid) left = mid + 1;
+            else right = mid - 1;
+        }
+        return left;
+    }
+
+    /*
+    *   问题14 III
+    *
+    *   假设一个单调递增的数组里的每个元素都是整数并且是唯一的。
+    *   请编程实现一个函数找出数组中任意一个数值等于其下标的元素。
+    *   例如，在数组[-3, -1, 1, 3, 5]中，数字3和它的下标相等。
+    **/
+    public static int problem14(int[] nums,char a){
+        if(nums == null || nums.length == 0){
+            return -1;
+        }
+        int left = 0, right = nums.length - 1;
+        while (left <= right){
+            int mid = (left + right) >> 1;
+            if(nums[mid] == mid) return mid;
+            if(nums[mid] < mid) left = mid + 1;
+            else right = mid - 1;
+        }
+        return -1;
+    }
+
+    /*
+    *   问题15 I 数组中只出现一次的两个数字
+    *
+    *   一个整型数组nums 里除两个数字之外，其他数字都出现了两次。
+    *   请写程序找出这两个只出现一次的数字。
+    *   要求时间复杂度是O(n)，空间复杂度是O(1)。
+    *
+    * */
+    public static int[] problem15(int[] nums){
+        int ret = 0;
+        for(int n : nums){
+            ret ^= n;
+        }
+        int lowBit = ret & (-ret);
+
+        int a = 0,b = 0;
+        for (int n : nums){
+            if((lowBit & n) != 0){
+                a ^= n;
+            }else {
+                b ^= n;
+            }
+        }
+        return new int[]{a,b};
+    }
+
+    /*
+    *   问题15 II 数组中唯一只出现过一次的数字
+    *
+    *   在一个数组nums 中除一个数字只出现一次之外，其他数字都出现了三次。请找出那个只出现一次的数字。
+    * */
+    public static int problem15(int[] nums,int a){
+        int ones = 0, twos = 0;
+        for(int num : nums){
+            ones = ones ^ num & ~twos;
+            twos = twos ^ num & ~ones;
+        }
+        return ones;
+    }
+
+    /*
+    *   题目16 I 和为s的两个数字
+    *
+    *   输入一个递增排序的数组和一个数字s，在数组中查找两个数，使得它们的和正好是s。
+    *   如果有多对数字的和等于s，则输出任意一对即可。
+    * */
+    public static int[] problem16(int[] nums, int target){
+        int i = 0,j = nums.length - 1;
+        while (i < j) {
+            int s = nums[i] + nums[j];
+            if(s == target) return new int[]{nums[i],nums[j]};
+            if(s < target) i++;
+            else j--;
+        }
+        return null;
+    }
+
+    /*
+    *   题目16 II 和为s的连续正数序列
+    *
+    *   输入一个正整数 target ，输出所有和为 target 的连续正整数序列（至少含有两个数）。
+    *   序列内的数字由小到大排列，不同序列按照首个数字从小到大排列。
+    * */
+    public static int[][] problem16(int target){
+        List<int[]> vec = new ArrayList<>();
+        int left = 1, right = 2;
+        while (left < right){
+            //计算left ~ right 之间的和
+            int sum = (left + right) * (right - left + 1) / 2;
+            if(sum == target){
+                int[] res = new int[right - left + 1];
+                for (int i = left; i <= right; i++){
+                    res[i - left] = i;
+                }
+                vec.add(res);
+                left++;
+            }else if(sum > target){
+                left++;
+            }else {
+                right++;
+            }
+        }
+        return vec.toArray(new int[vec.size()][]);
+    }
+
+    /*
+    *   题目16 II 和为s的连续正数序列
+    *
+    *   剑指offer的解法
+    * */
+    public static int[][] problem16(int target,int a){
+        if(target < 3){
+            return null;
+        }
+        List<int[]> vec = new ArrayList<>();
+        int left = 1,right = 2;
+        int mid = (1 + target) / 2;
+        int curSum = left + right;
+        while (left < mid){
+            if (curSum == target){
+                int[] res = printSequence(left,right);
+                vec.add(res);
+            }
+            while (curSum > target && left < mid){
+                curSum -= left;
+                left++;
+                if (curSum == target){
+                    int[] res = printSequence(left,right);
+                    vec.add(res);
+                }
+            }
+            right++;
+            curSum += right;
+        }
+        return vec.toArray(new int[vec.size()][]);
+    }
+
+    private static int[] printSequence(int left,int right){
+        int[] res = new int[right - left + 1];
+        for (int i = left; i <= right; i++)
+            res[i-left] = i;
+        return res;
+    }
+
+    /*
+    *   问题17 股票的最大利润
+    *
+    *   假设把某股票的价格按照时间先后顺序存储在数组中，请问买卖该股票一次可能获得的最大利润是多少？
+    * */
+    public static int problem17(int[] prices){
+        int min = Integer.MAX_VALUE;
+        int maxDiff = 0;
+
+        for(int i = 0; i < prices.length; i++){
+            if(prices[i] < min)
+                min = prices[i];
+            else if(prices[i] - min > maxDiff)
+                maxDiff = prices[i] - min;
+        }
+        return maxDiff;
+    }
+
     public static void main(String[] args) {
+        problem16(15,1);
     }
 }

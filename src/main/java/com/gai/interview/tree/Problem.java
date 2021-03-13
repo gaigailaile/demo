@@ -485,7 +485,7 @@ public class Problem {
     }
 
     //序列化
-    public static String serialize(TreeNode root){
+    private static String serialize(TreeNode root){
         StringBuffer str = new StringBuffer();
         if(root == null){
             str.append("#,");
@@ -498,8 +498,8 @@ public class Problem {
     }
 
     //反序列化
-    public static int index = -1;
-    public static TreeNode deserialize(String str){
+    private static int index = -1;
+    private static TreeNode deserialize(String str){
         if(str == null || str.length() == 0){
             return null;
         }
@@ -520,7 +520,7 @@ public class Problem {
     /*
     *   不需要index辅助的方法
     * */
-    public static TreeNode deserialize(String str,int a){
+    private static TreeNode deserialize(String str,int a){
         if(str == null || str.length() == 0){
             return null;
         }
@@ -532,7 +532,7 @@ public class Problem {
         return deserialize(queue);
     }
 
-    public static TreeNode deserialize(Queue<String> queue){
+    private static TreeNode deserialize(Queue<String> queue){
         String val = queue.poll();
         if("#".equals(val))
             return null;
@@ -540,6 +540,58 @@ public class Problem {
         node.left = deserialize(queue);
         node.right = deserialize(queue);
         return node;
+    }
+
+    /*
+    *   给定一棵二叉搜索树，请找出其中第k大的节点。
+    * */
+    private static int res = 0;
+    private static int k1 = 0;
+    public static int problem13(TreeNode pRoot,int k){
+        k1 = k;
+        dfs(pRoot);
+        return res;
+    }
+
+    private static void dfs(TreeNode pRoot){
+        if(pRoot == null) return;
+        dfs(pRoot.right);
+        if(k1 == 0) return;
+        if(--k1 == 0) res = pRoot.value;
+        dfs(pRoot.left);
+    }
+
+    /*
+    *   问题14 I
+    *   输入一棵二叉树的根节点，求该树的深度。
+    *   从根节点到叶节点依次经过的节点（含根、叶节点）形成树的一条路径，最长路径的长度为树的深度。
+    * */
+    public static int problem14(TreeNode root){
+        if(root == null) return 0;
+        int left = problem14(root.left);
+        int right = problem14(root.right);
+        return left > right ? (left + 1) : (right + 1);
+    }
+
+    /*
+    *   问题14 II 平衡二叉树
+    *
+    *   输入一棵二叉树的根节点，判断该树是不是平衡二叉树。
+    *   如果某二叉树中任意节点的左右子树的深度相差不超过1，那么它就是一棵平衡二叉树。
+    * */
+    public static boolean problem14(TreeNode root,int a){
+        return recur(root) != -1;
+    }
+
+    private static int recur(TreeNode root){
+        if(root == null){
+            return 0;
+        }
+        int left = recur(root.left);
+        if(left == -1) return -1;
+        int right = recur(root.right);
+        if(right == -1) return -1;
+        return Math.abs(left-right) < 2 ? Math.max(left + 1,right + 1) : -1;
     }
 
     public static void main(String[] args) {

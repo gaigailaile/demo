@@ -209,7 +209,53 @@ public class Problem {
         return ' ';
     }
 
+    /*
+    *   问题8 I 翻转单词顺序
+    *
+    *   输入一个英文句子，翻转句子中单词的顺序，但单词内字符的顺序不变。
+    *   为简单起见，标点符号和普通字母一样处理。
+    *   例如输入字符串"I am a student. "，则输出"student. a am I"。
+    *
+    * */
+    public static String problem8(String s){
+        s = s.trim();
+        int j = s.length() - 1, i = j;
+        StringBuffer res = new StringBuffer();
+        while (i >= 0) {
+            //i向前移动寻找空格
+            while (i >= 0 && s.charAt(i) != ' ') i--;
+            //将i ~ j之间的字母存放到别处
+            res.append(s.substring(i + 1,j + 1) + " ");
+            //i向前移动寻找不是空格的字符
+            while (i >= 0 && s.charAt(i) == ' ') i--;
+            j = i;
+        }
+        return res.toString().trim();
+    }
+
+    /*
+    *   问题8 II 左旋转字符串
+    *
+    *   字符串的左旋转操作是把字符串前面的若干个字符转移到字符串的尾部。
+    *   请定义一个函数实现字符串左旋转操作的功能。
+    *   比如，输入字符串"abcdefg"和数字2，该函数将返回左旋转两位得到的结果"cdefgab"。
+    * */
+    public static String problem8(String str,int n) {
+        if (str == null || str.length() == 0)
+            return str;
+        String s1 = reverse(str.substring(0,n));
+        String s2 = reverse(str.substring(n,str.length()));
+        return reverse(s1+s2);
+    }
+
+    private static String reverse(String str) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = str.length() - 1; i >= 0 ; i--) {
+            sb.append(str.charAt(i));
+        }
+        return String.valueOf(sb);
+    }
+
     public static void main(String[] args) {
-        System.out.println(problem5(11001));
     }
 }

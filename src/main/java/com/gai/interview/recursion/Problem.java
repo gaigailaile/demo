@@ -1,5 +1,8 @@
 package com.gai.interview.recursion;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Problem {
 
     /*
@@ -226,7 +229,71 @@ public class Problem {
         return dp[n-1];
     }
 
+    /*
+    *   问题8 扑克牌中的顺子
+    *
+    *   从扑克牌中随机抽5张牌，判断是不是一个顺子，即这5张牌是不是连续的。
+    *   2～10为数字本身，A为1，J为11，Q为12，K为13，而大、小王为 0 ，可以看成任意数字。A 不能视为 14。
+    * */
+    public static boolean problem8(int[] nums){
+        Set<Integer> repeat = new HashSet<>();
+        int min = 14, max = 0;
+        for (int num : nums){
+            if(num == 0) continue;
+            if(repeat.contains(num)) return false;
+            min = Math.min(min,num);
+            max = Math.max(max,num);
+            repeat.add(num);
+        }
+        return max - min < 5;
+    }
+
+    /*
+    *   问题9 圆圈中最后剩下的数字
+    *
+    *   0,1,···,n-1这n个数字排成一个圆圈，从数字0开始，每次从这个圆圈里删除第m个数字（删除后从下一个数字开始计数）。
+    *   求出这个圆圈里剩下的最后一个数字。
+    *   例如，0、1、2、3、4这5个数字组成一个圆圈，从数字0开始每次删除第3个数字，则删除的前4个数字依次是2、0、4、1，因此最后剩下的数字是3。
+    * */
+    public static int problem9(int n,int m){
+        if(n < 1 || m < 1)
+            return -1;
+        int last = 0;
+        for (int i = 2; i <= n; i++)
+            last = (last + m) % i;
+        return last;
+    }
+
+    /*
+     *   问题9 圆圈中最后剩下的数字
+     *
+     *   遍历方法
+     *
+     *   f(n,m) = (f(n-1,m) + m ) % n
+     * */
+    public static int problem9(int n,int m,int a){
+        return f(n,m);
+    }
+
+    private static int f(int n, int m) {
+        if (n == 1) {
+            return 0;
+        }
+        int x = f(n - 1, m);
+        return (m + x) % n;
+    }
+
+    /*
+    *   问题10 求1+2+…+n
+    *
+    *   求 1+2+...+n ，要求不能使用乘除法、for、while、if、else、switch、case等关键字及条件判断语句（A?B:C）。
+    * */
+    public static int problem10(int n){
+        boolean flag = n > 0 && (n += problem10(n - 1)) > 0;
+        return n;
+    }
+
     public static void main(String[] args) {
-        System.out.println(problem6(0));
+        System.out.println(problem8(new int[]{0,0,1,2,5}));
     }
 }
