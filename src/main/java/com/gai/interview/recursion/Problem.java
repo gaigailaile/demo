@@ -84,6 +84,8 @@ public class Problem {
      *   问题3
      *
      *   该方案考虑exponent为0或者负数的情况
+     *
+     *   exponent超大时会报错
      * */
     public static double problem3(double base,int exponent,int a){
         double result = 1.0;
@@ -137,6 +139,22 @@ public class Problem {
         return result;
     }
 
+    public static double problem3(double base,int exponent,String d,int a){
+        if(base == 0) return 0;
+        long b = exponent;
+        double res = 1.0;
+        if(b < 0) {
+            base = 1 / base;
+            b = -b;
+        }
+        while(b > 0) {
+            if((b & 1) == 1) res *= base;
+            base *= base;
+            b >>= 1;
+        }
+        return res;
+    }
+
     /*
     *   输入数字 n，按顺序打印从 1 到最大的 n 位数十进制数，比如：输入 3，打印出 1 到 999.
     * */
@@ -167,6 +185,14 @@ public class Problem {
                 return ;
             }
         }
+    }
+
+    public static int[] problem4(int n,int a){
+        int[] res = new int[(int)Math.pow(10,n)-1];
+        for(int i=0;i<res.length;i++){
+            res[i] = i+1;
+        }
+        return res;
     }
 
     /*
@@ -318,6 +344,6 @@ public class Problem {
     }
 
     public static void main(String[] args) {
-        System.out.println(problem8(new int[]{0,0,1,2,5}));
+        problem4(3);
     }
 }
