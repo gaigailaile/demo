@@ -270,22 +270,29 @@ public class Problem {
         return A;
     }
 
+    public static ListNode problem9(ListNode head){
+        ListNode pre = null;
+        ListNode curr = head;
+        while (curr != null) {
+            ListNode tmp = curr.next;
+            curr.next = pre;
+            pre = curr;
+            curr = tmp;
+        }
+        return pre;
+    }
+
     public static void main(String[] args) {
-        ComplexListNode A = new ComplexListNode("A");
-        ComplexListNode B = new ComplexListNode("B");
-        ComplexListNode C = new ComplexListNode("C");
-        ComplexListNode D = new ComplexListNode("D");
-        ComplexListNode E = new ComplexListNode("E");
-        A.next = B;
-        B.next = C;
-        C.next = D;
-        D.next = E;
-
-        A.sibling = C;
-        B.sibling = E;
-        D.sibling = B;
-
-        ComplexListNode result = problem7(A);
+        ListNode A = new ListNode(5);
+        ListNode b = new ListNode(4);
+        ListNode c = new ListNode(3);
+        ListNode d = new ListNode(2);
+        ListNode e = new ListNode(1);
+        A.next = b;
+        b.next = c;
+        c.next = d;
+        d.next = e;
+        problem9(A);
         System.out.println();
     }
 }
