@@ -13,6 +13,7 @@ public class RunDemo {
 //    }
 
     public static void fileDelete(File file) {
+        System.out.println("模拟他人合并代码4");
         if(file.isDirectory()){
             File[] childrenFiles = file.listFiles();
             for (File childFile:childrenFiles){
